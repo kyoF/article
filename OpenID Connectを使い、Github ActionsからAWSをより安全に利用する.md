@@ -1,5 +1,3 @@
-この記事は、[マイナビ Advent Calendar 2021](https://qiita.com/advent-calendar/2021/mynavi) 4日目の記事です。
-
 ## 概要
 本記事は、2021年11月1日にGitHubから発表された、GitHub ActionsによるOpenID Connectの概要や実装方法等をまとめた記事になります。
 GihHub ActionsでAWSの永続的なクレデンシャル（IDやパスワードをはじめとする、ユーザ等の認証に用いられる情報の総称）を渡すことなく、IAM Roleが利用できるようになったので、その紹介です。

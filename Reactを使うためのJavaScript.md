@@ -1,19 +1,18 @@
-この記事は、[マイナビ Advent Calendar 2021](https://qiita.com/advent-calendar/2021/mynavi) 14日目の記事です。
-
 # はじめに
-私は新卒でマイナビに入社しました。
-入社した後、いくつか研修を受け、その研修の中でReact（+TypeScript）を触る機会がありました。
-今までプログラミング経験はありましたが、フロントエンドのコードにはほとんど触れたことがなく、何が何だかわからずReactを触っていました。
-エラーが出てはググって、それっぽいところを直して次に行くというようなことをしていたので、触ってはいるけどなんか知識として身についていないなと感じました（研修でも納期的なことがあるので、たくさん時間をかけている余裕が当時ありませんでした。。。）。
-研修も終わり、Reactを業務で触る機会が無くなってしまったので、ReactとJavaScriptについて勉強をしていました。
-研修とは違い、時間的制約もありませんで、もし最初からこのJavaScriptの知識が分かっていれば苦労しなかったなという学びを得ることが出来ました。
-本記事では、JavaScriptを全く触ってこなかった私が、「なるほど」と思った部分についての記事になります。
-簡単に言うと初心者向けです。
-これからReactを触る方が少しでも参考になれば幸いです。
+この記事は、Reactを触る上で必要なJavaScriptの基本知識をいくつか紹介します。
+
+`if`や`for`は扱える上で、JavaScript特有の書き方などをつらつら書いています。
+
+今はJavaScriptよりTypeScriptの方が主流ですが、TypeScriptもJavaScriptから派生した言語なので、ここら辺の基礎知識はTypeScriptを扱う上でも大切になってくると思います。
+
+これからReactを触る方が、少しでも参考になれば幸いです。
 
 # 基本知識
 ## var・const・let
-今までは、変数・定数に限らずすべて`var`で宣言していたものを`const`を定数、`let`を変数として扱えるようになった。
+今までは、変数・定数はすべて`var`で宣言していたものを、`const`を定数、`let`を変数として扱えるようになりました。
+ここで言いたいことは、「`var`は使わないようにしよう」です。
+
+下記のコードでは、`const`を使用して、書き換えが出来ないようにしています。
 
 ```javascript
 // varの場合
@@ -23,9 +22,11 @@ console.log(js); // false
 
 // constの場合
 const js = true;
-js = false; // Uncaught TypError: ...
+js = false; 
+console.log(js); // Uncaught TypError: ...
 ```
-下記のコードのように、`var`では二重に宣言してしまっている状態でも動いてしまいますが、`let`キーワードを使用することでこの問題を解決できます。またこのコードから分かるように`if文`はスコープを持ちません。
+下記のコードでは、`if`の中で、外側と同じ変数を`var`で二重に宣言し、意図していない動きをしています。
+これは、`let`キーワードを使用することで解決できます。
 
 ```javascript
 // varの場合
@@ -70,13 +71,13 @@ for (let i = 1; i <= 5; i++) {
   container.appendChild(div);
 }
 ```
-上記では、`for`文で利用する`i`を`var`か`let`に変えたのみです。
-このプログラムで生成される`div`をクリックする、`var`では、どの`div`要素でも`6`が、`let`では、生成された順番の整数値が表示されます。
-これが`var`と`let`の違いです。
+上記の違いは、`for`文で利用する`i`を、`var`と`let`どちらで宣言しているか、だけです。
+このプログラムで生成される`div`をクリックすると、`var`で宣言した場合ではどの`div`要素でも`6`が、`let`で宣言された場合では生成された順番の整数値が表示されます。
 
 ## 文字列
 
-文字列を表す方法はいくつかあります。
+変数と文字列を一文で表す方法は、主に二通りの方法があります。
+加算演算子を用いる方法と、バッククォーテーションを用いる方法です。
 
 ```javascript
 const java = "java";
@@ -84,10 +85,12 @@ const script = "script";
 
 // 換算演算子を用いた場合
 console.log("This language is " + java + script + "!!"); // This language is javascript!!
+
 // バッククォートと${}を用いた場合
 console.log(`This language is ${java}${script}!!`); // This language is javascript!!
 ```
-バッククォートを用いると、改行も認識してくれます。メール文面のテンプレートを作成したり、`HTML`を記述したりするのに便利です。
+下記のコードのようにバッククォートを用いると、改行も認識してくれます。
+メール文面のテンプレートを作成したり、`HTML`を記述したりするのに便利です。
 
 ```javascript
 const js = "javascript";
@@ -114,8 +117,7 @@ function test() {
 }
 test(); // javascript
 ```
-関数式と言い、変数の中に関数を入れることが出来ます。これは、上記のコードと全く同じです。
-普通に`function`で宣言するのと違い、関数を呼び出す前に、関数宣言をする必要があります。
+JavaScriptでは変数の中に関数を入れることが出来ます。これを関数式と言い、下記のコードは上記のものと全く同じです。
 
 ```javascript
 const test = function() {
@@ -123,7 +125,7 @@ const test = function() {
 };
 test();  // javascript
 ```
-また、関数に引数を設定する場合、デフォルト値を設定することが出来ます。
+また下記コードのように、関数に引数を設定する場合、デフォルト値を設定することが出来ます。
 
 ```javascript
 const test = function(name="javascript") {
@@ -152,39 +154,25 @@ function searchPersona(persona=defaultPersona) {
 JavaScriptには、`function`や`return`なしで関数を記述できるアロー関数が存在します。
 アロー関数を定義する際には`=>`を用い、これが矢に見えることからアロー関数と呼ばれています。
 
+アロー関数を使うことで、関数を一文で記述することが出来ます。
+関数の戻り値が単一の式であらわされる場合は`return`文も不要になります。
+
 ```javascript
-// 関数式
+// 関数式の場合
 const test = function(name) {
   return `My name is ${name}.`;
 };
 console.log(test("javascript")); // My name is javascript.
 
-// アロー関数
+// アロー関数の場合
 const test = name => `My name is ${name}.`;
 console.log(test("javascript")); // My name is javascript.
 ```
-アロー関数を使うことで、関数を一文で記述することが出来ます。
-関数の戻り値が単一の式であらわされる場合は`return`文も不要になります。
-
 また、引数が二つの場合は、二つの引数をカッコで囲む必要があります。
 
 ```javascript
 const test = (firstname, lastname) => `My name is ${firstname} ${lastname}.`;
 console.log(test("hoge", "fuga")); // My name is hoge fuga.
-```
-アロー関数で`return`文を使うと以下のようになります。
-
-```javascript
-const test = (firstname, lastname) => {
-  if (!firstname) {
-    throw new Error("firstname is not entered.");
-  }
-  if (!lastname) {
-    throw new Error("lastname is not entered.");
-  }
-  return `My name is ${firstname} ${lastname}.`;
-};
-console.log(test("hoge", "fuga"));
 ```
 アロー関数でオブジェクトを戻り値とする関数を作成することもできます。
 
@@ -196,7 +184,7 @@ const test = (firstname, lastname) => ({
 console.log(test("hoge", "fuga")); // { firstname: 'hoge', lastname: 'fuga' }
 ```
 気を付けるべきポイントとして、戻り値を`()`でくくる必要があります。
-アロー関数を一文で記述するときは、戻り値のオブジェクトをカッコで囲みましょう。
+オブジェクトを返すアロー関数を一文で記述するときは、戻り値を`()`で囲みましょう。
 
 最後にアロー関数のスコープについてです。実際にコードを確認したほうが分かりやすいと思います。
 
@@ -241,6 +229,9 @@ const test() = {
 
 デストラクチャリングとは、オブジェクトを変数に代入したり、必要なプロパティだけを取捨選択できる機能です。
 
+下記のコードは、`menu`プロパティを分解して`meat`と`fish`をローカル変数に代入しています。
+このように、オブジェクトから必要最低限の変数のみを宣言することができます。
+
 ```javascript
 const menu = {
   meat: "steak",
@@ -250,8 +241,6 @@ const menu = {
 const { meat, fish } = menu;
 console.log(meat, fish); // steak salmon
 ```
-上記のコードは、`menu`プロパティを分解して`meat`と`fish`をローカル変数に代入しています。
-
 また、デストラクチャリングは変数の代入だけでなく、関数の引数にも適用できます。
 
 ```javascript
@@ -286,9 +275,12 @@ const menu = {
 const test = ({ meat,  mealSet: { fishSet } }) => {
   console.log(`I ate ${meat} and ${fishSet}!`);
 };
-test(menu); // I ate steak and tuna  and rice!
+test(menu); // I ate steak and tuna and rice!
 ```
 ### 配列に対するデストラクチャリング
+
+下記コードのように、不要な要素を読み飛ばして必要な要素のみを取得する（リストマッチング）ことが出来ます。
+配列のデストラクチャリングは、この後紹介する[スプレッド構文](#スプレッド構文)と組み合わせて使われることが多いです。
 
 ```javascript
 const [firstAnimal] = ["dog", "cat", "turtle"];
@@ -297,8 +289,7 @@ console.log(firstAnimal); // dog
 const [, , lastAnimal] = ["dog", "cat", "turtle"]:
 console.log(lastAnimal); // turtle
 ```
-上記コードのように、不要な要素を読み飛ばして必要な要素のみを取得する（リストマッチング）ことが出来ます。
-配列のデストラクチャリングはこの後紹介するスプレッド構文と組み合わせて使われることが多いです。
+
 
 ## オブジェクトリテラル
 
@@ -308,7 +299,8 @@ console.log(lastAnimal); // turtle
 const name = "javascript";
 const birthday = 1995;
 const print = () => `javascript test`;
-const programmingLang = { name, birthday, print }; // { name: name, birthday: birthday, print: print } の省略系を記載
+const programmingLang = { name, birthday, print }; 
+// プロパティ名を書くと { name: name, birthday: birthday, print: print } のようになる
 
 console.log(programmingLang); // { name: 'javascript', birthday: 1995, print: [Function: print] }
 console.log(programmingLang.print()); // javascript test
@@ -327,7 +319,7 @@ const persona = {
   }
 };
 
-// 省略した場合（変数名も省略）
+// 省略した場合（プロパティ名も省略）
 const persona = {
   firstname,
   lastname,
@@ -338,7 +330,7 @@ const persona = {
   }
 };
 ```
-javascriptでは、このようにオブジェクトリテラルが簡素に記述できます。
+javascriptでは、このようにオブジェクトが簡素に記述できます。
 
 ## スプレッド構文
 
@@ -346,30 +338,28 @@ javascriptでは、このようにオブジェクトリテラルが簡素に記�
 まず、配列の連結で使用されます。
 
 ```javascript
-const testList1 = ["javascript", "ruby"];
-const testList2 = ["python", "html"];
-const unionList = [...testList1, ...testList2];
+const langList1 = ["javascript", "ruby"];
+const langList2 = ["python", "html"];
+const unionList = [...langList1, ...langList2];
 console.log(unionList.join(", ")); // javascript, ruby, python, html
 ```
 
-次にイミュータブルな配列を実現するために使用されます。
+次に、イミュータブルな配列を実現するためにスプレッド構文が使用されます。
+下記のコードでは、元の`testList`が`reverse`メソッドによって書き換えられてしまっています（破壊的メソッド）。
 
 ```javascript
 const testList = ["javascript", "ruby", "python"]
 const [last] = testList.reverse();
 console.log(last, testList); // python [ 'python', 'ruby', 'javascript' ]
 ```
-上記のコードでは、元の`testList`が`reverse`メソッドによって書き換えられてしまっています（破壊的メソッド）。
-
 これを防ぐために、スプレッド構文で元の配列のコピーを作成し、それを使用するようにします。
+そうすることで、元の配列が変更されることなく、配列の最後の要素を取得することが出来ます。
 
 ```javascript
 const testList = ["javascript", "ruby", "python"]
 const [last] = [...testList].reverse();
 console.log(last, testList); // python [ 'javascript', 'ruby', 'python' ]
 ```
-上記のようにすることで、元の配列が変更されることなく、配列の最後の要素を取得することが出来ます。
-
 スプレッド構文はまた、配列の要素数が分かっていない場合の「残り全部」を簡単に表現することが出来ます。
 
 ```javascript
@@ -377,8 +367,10 @@ const listLang = ["javascript", "ruby", "python", "C"];
 const [first, ...others] = listLang;
 console.log(others.join(", ")); // ruby, python, C
 ```
-関数の引数を配列として受け取るために、スプレッド構文が使われます（残余引数）。
+関数の引数を配列として受け取るにも、スプレッド構文が使われます（残余引数）。
+
 以下のコードは、可変長の引数を残余引数として受け取る関数です。
+このコードでは、残余引数としてだけでなく、配列の先頭と末尾の要素を変数に格納するのにもスプレッド構文を使用しています。
 
 ```javascript
 function searchList(...args) {
@@ -391,8 +383,6 @@ function searchList(...args) {
 };
 searchList("first", "second", "third", "forth", "fifth");
 ```
-上記のコードでは、残余引数としてだけでなく、配列の先頭と末尾の要素を変数に格納するのにもスプレッド構文を使用しているのが分かるかと思います。
-
 最後に、スプレッド構文は配列だけでなく、オブジェクトにも使用できます。
 
 ```javascript
@@ -413,38 +403,43 @@ console.log(mealOfTheDay); // { breakfast: 'bread', lunch: 'tuna and rice', dinn
 ## 非同期処理
 
 非同期処理とは、一つのタスクが実行中であっても他のタスクを実行できる実行方式です。
-今まで紹介したコードはすべて同期処理です。同期処理とは、実行したい命令を箇条書きにするようなイメージです。
+
+今まで紹介したコードはすべて同期処理です。
+同期処理とは、実行したい命令を箇条書きにするようなイメージです。
 
 ```javascript
 const header = document.getElementById("heading");
 header.innerHTML = "Hello World!";
 ```
-上記のコードを言葉で表すと、「`id`の値が`heading`である要素を選択し、それが終わったあと、要素のデータを`Hello Word!`に書き換えてください」といったように、逐次的に処理されるため、この命令が実行中は他の命令は実行されません。
+上記のコードを言葉で表すと、「`id`の値が`heading`である要素を選択し、それが終わったあと、要素のデータを`Hello Word!`に書き換えてください」となります。
+これは逐次的に処理されるため、この命令が実行中は他の命令は実行されません。
 
 非同期処理は、ある命令の処理中に他の命令も実行できるようにした実行方式です。
 これを実現するために、JavaScriptには`Promise・fetch`と`async・await`があります。
 
 ### Promise・fetch
 
-`fetch`とはHTTPのリクエストを送信してレスポンスを受信するためのJavaScript APIです。
+`fetch`とは、HTTPのリクエストを送信してレスポンスを受信するためのJavaScript APIです。
+ここで、`https://javascript.api.sample?results=1`は、サンプルのURLとします。
 
 ```javascript
 console.log(fetch("https://javascript.api.sample?results=1"));
 ```
-上記では、`fetch`の戻り値をログ出力していますが、出力されるのはPending（保留中）のPromiseオブジェクトが出力されます。
-ここで、Promiseとは、非同期処理の状態を表すオブジェクトで、Pending（保留中）、Resolved（成功）、Rejected（失敗）の3つの状態を表します。
-ブラウザがfetch呼び出しに対する値をそのまま返すことなく、データが取得できるかできないかに限らず、結果をお伝えしますという**約束**をするようなイメージです。
+上記では、`fetch`の戻り値をログ出力していますが、出力されるのは`Pending（保留中）`の`Promise`オブジェクトです。
 
-fetchの戻り値のPromiseオブジェクトは、thenメソッドを使用することで扱うことが出来ます。
-データの取得依頼をする際、完了したら実行してほしい処理をthenを使用して指定するようなイメージです。
+ここで、`Promise`とは、非同期処理の状態を表すオブジェクトで、`Pending（保留中）`、`Resolved（成功）`、`Rejected（失敗）`の3つの状態を表します。
+ブラウザが`fetch`呼び出しに対する値をそのまま返さずに、データが取得できてもできなくても結果をお伝えします、という**約束**をするようなイメージです。
+
+`fetch`の戻り値の`Promise`オブジェクトは、`then`メソッドを使用することで扱うことが出来ます。
+`fetch`の取得処理が完了したら実行してほしい処理を`then`を使用して指定するようなイメージです。
 
 ```javascript
 fetch("https://javascript.api.sample?results=1").then(res =>
   console.log(res.json());
 );
 ```
-
-thenメソッドに渡したコールバック関数は、非同期処理が成功した際に呼ばれます。このコールバック関数でさらに戻り値を返した場合、さらにthenメソッドのコールバック関数引き継ぐことが出来ます。
+`then`メソッドに記載した関数（コールバック関数）は、非同期処理が成功した際に呼ばれます。
+このコールバック関数がさらに戻り値を返した場合、さらに`then`メソッドのコールバック関数に引き継ぐことが出来ます。
 
 ```javascript
 fetch("https://javascript.api.sample?results=1")
@@ -453,13 +448,17 @@ fetch("https://javascript.api.sample?results=1")
   .then(console.log)
   .catch(console.error);
 ```
-上記のコードでは、初めにfetch内に記載したURLに対してリクエストを送信しています。
-成功した次は、レスポンスの文字列をjsonオブジェクトに変換し、
-それが成功した後、jsonオブジェクトのresultsプロパティを取り出し、
+上記のコードでは、初めに`fetch`内に記載した`URL`に対してリクエストを送信しています。
+成功した次は、レスポンスの文字列を`json`オブジェクトに変換します。
+それが成功した後、`json`オブジェクトの`results`プロパティを取り出します。
 最後にログ出力をします。
-これらの処理のどこかでエラーが発生した場合は、catch内に設定したコールバック関数が呼ばれ、エラーオブジェクトが出力されます。
 
-またPromiseオブジェクトは生成することも可能です。
+これらの処理のどこかでエラーが発生した場合は、`catch`内に設定したコールバック関数が呼ばれ、エラーオブジェクトが出力されます。
+
+また`Promise`オブジェクトは、自分で生成することも可能です。
+
+下記コードでは、`Promise`オブジェクトがコールバック関数とともに生成されています。
+コールバック関数の引数では`resolves`と`rejects`は、成功した場合は`resolves`、失敗した場合には`rejects`にデータが渡ります。
 
 ```javascript
 const test = count =>
@@ -475,8 +474,7 @@ const test = count =>
     request.send();
   });
 ```
-上記のコードでは、Promiseオブジェクトがコールバック関数とともに生成されています。コールバック関数の引数のresolvesとrejectsは、成功した場合はresolves、失敗した場合にはrejectsにデータが渡ります。
-この関数の使用方法は、Promiseオブジェクトに対して、then/catchメソッドを呼び出す必要があります。
+この関数の使用方法は、`Promise`オブジェクトに対して、下記コードのように`then/catch`メソッドを呼び出す必要があります。
 
 ```javascript
 test(5)
@@ -486,8 +484,9 @@ test(5)
 
 ### async・await
 
-Promiseを使う別の方法として、async関数を使う方法もあります。これを使用することで、非同期関数を同期関数のように呼び出すことが出来ます。
-Promiseオブジェクトを受け取って、thenメソッドで値を取り出す代わりに、awaitキーワードを書くことで、Promiseが成功するまで処理が止まります。
+`Promise`を扱う別の方法として、`async`関数を使う方法もあります。これを使用することで、非同期関数を同期関数のように呼び出すことが出来ます。
+
+`Promise`オブジェクトを受け取って、`then`メソッドで値を取り出す代わりに、`await`キーワードを書くことで、`Promise`が成功するまで処理が止まります。
 
 ```javascript
 const test = async () => {
@@ -501,12 +500,13 @@ const test = async () => {
 };
 test();
 ```
-上記のコードではasyncキーワードを使って関数宣言をしているため、非同期関数を呼び出す際にawaitを使用することが出来ます。
-ここでは、awaitを使用してfetchを呼び出しているため、以降のコードはPromiseが成功するまで実行されません。
-また、エラー処理に関してはtry/catchを使用することで、例外処理を実装できます。
+上記のコードでは`async`キーワードを使って関数宣言をしているため、非同期関数を呼び出す際に`await`を使用することが出来ます。
 
-Promise/fetchでPromiseを生成しました。
-その際は、thenを使用して、非同期処理を実装しましたが、async/awaitを使用しても同じように非同期処理を実装することが出来ます。
+ここでは、`await`を使用して`fetch`を呼び出しているため、以降のコードは`Promise`が成功するまで実行されません。
+また、エラー処理に関しては`try/catch`を使用することで、例外処理を実装できます。
+
+[Promise/fetch](#promisefetch)で、自ら`Promise`を生成しました。
+その際は、`then`を使用して、非同期処理を実装しましたが、`async/await`を使用しても同じように非同期処理を実装することが出来ます。
 
 ```javascript
 const test = count =>
@@ -534,66 +534,67 @@ async function testUseAsyncAndAwait() {
 
 ## モジュール
 
-JavaScriptで、モジュールは再利用可能なコードで、他のJavaScriptのファイルからインポートすることで利用できます。個々のモジュールは別々のファイルに格納されており、名前空間が独立しているため、たとえばモジュール間で変数名が重複していても衝突は起こりません。ひとつのモジュールから、複数のオブジェクトをエクスポートすることも可能ですし、単一のオブジェクトのみをエクスポートするモジュールも可能です。たとえば、以下のモジュール（text-helpers.js）は2 つの関数をエクスポートしています。
+JavaScriptにおいて、モジュールとは再利用可能なコードで、他のJavaScriptのファイルからインポートすることで利用できます。
+たとえば、以下のモジュールは`print`と`log`の2つの関数をエクスポートしています。
 
-```javascript
+```javascript:testExport.js
 export const print = message => log(message, date());
 export const log = (message, timestamp) =>
-console.log(`${timestamp.toString()}: ${message}`);
+  console.log(`${timestamp.toString()}: ${message}`);
 const date = () => new Date();
 ```
+変数や関数の宣言に`export`をつけることで、他のモジュールからインポートすることが出来るようになります。
 
-変数や関数の宣言にexport を付加することで、他のモジュールからインポートして使用することが可能になります。上記の例では print 関数と log 関数がエクスポートされています。date関数はエクスポートされていないため、そのモジュール内でのみ参照可能で、他のモジュールから
-は参照できません。
-一方、単一のオブジェクトをエクスポートする場合は、export default と記述します。以下のモジュール（mt-freel.js）は単一のオブジェクトをエクスポートしています。
+一方、単一のオブジェクトをエクスポートする場合は、`export default`と記述します。
 
-```javascript
-export default new Expedition("Mt. Freel", 2, ["water", "snack"]);
+下記のコードは、`Test`クラスのインスタンスを生成して、`default`キーワードを付けてエクスポートしています。
+それにより、他のモジュールからこのインスタンスをインポートして使用することが可能になります。
+
+```javascript:testDefaultExport.js
+export default new Test("javascript", 1, ["ruby", "python"]);
 ```
 
-上記の例ではExpedition クラスのインスタンスを生成してdefault キーワードを付けてエクスポートしています。それにより、他のモジュールからこのインスタンスをインポートして使用することが可能になります。それでは次にこれらのモジュールをインポートして使用する側のコード
-を見てみましょう。
+これらのモジュールをインポートして使用する場合は以下のようにします。
 
 ```javascript
-import { print, log } from "./text-helpers";
-import freel from "./mt-freel";
+import { print, log } from "./testExport";
+import test from "./testDefaultExport";
 print("printing a message");
 log("logging a message");
-freel.print();
+test.print();
 ```
+上記コードのとおり、エクスポートする際の`default`キーワードの有無により、インポートの記述が異なります。
 
-ご覧のとおり、エクスポートする際のdefault キーワードの有無により、インポートの記述が異なります。最初の行では、デストラクチャリングを使用して複数の値を受け取っているのに対し、2 行目のdefault を使用してエクスポートされたモジュールは単一の変数を使ってインポー
-トされています。
-また、エクスポート側とは異なる名前でインポートすることも可能です。以下のコードでは、先のprint 関数とlog 関数をそれぞれp とl という変数で受け取っています。
+最初の行では、デストラクチャリングを使用して複数の値を受け取っているのに対し、2行目の`default`を使用してエクスポートされたモジュールは単一の変数を使ってインポートされています。
+
+また、エクスポート側とは異なる名前でインポートすることも可能です。
 
 ```javascript
-import { print as p, log as l } from "./text-helpers";
+import { print as p, log as l } from "./testExport";
 p("printing a message");
 l("logging a message");
 ```
-
 また、以下のように、エクスポートされたすべての値を単一のオブジェクトで受け取ることも可能です。
 
 ```javascript
-import * as fns from "./text-helpers";
+import * as exportObject from "./testExport";
 ```
 
-ここで紹介した import と export は ECMAScript モジュール（ESM）と呼ばれる仕様の一部です。ESM はプラットフォームによりサポートにばらつきがあり、一部の機能はまだすべてのブラウザで実装されていません。けれども、先述のとおり Babel を使えばそういった差分を吸収してくれます。
-2.7.1 CommonJS モジュール
-ECMAScript モジュールが登場する前から、Node.js ではCommonJS というモジュールパターンが採用されていました（https://oreil.ly/CN-gA）。Babel や webpack ではこの CommonJSがサポートされているので、それらのツールを使うのであれば、CommonJS 形式のモジュールをインポート／エクスポートすることが可能です。
-CommonJS では、module.exports という特別なオブジェクト経由でモジュールをエクスポートします。たとえば、先ほどの print 関数と log 関数を CommonJS モジュールとしてエクスポートするには、以下のように記述します。
+別のモジュール使用方法として`CommonJS`があります。
 
-```javascript
+`CommonJS`では、`module.exports`という特別なオブジェクト経由でモジュールをエクスポートします。
+
+```javascript:testExport.js
 const print = message => log(message, new Date());
 const log = (message, timestamp) =>
 console.log(`${timestamp.toString()}: ${message}`);
-module.exports = {print, log};
+module.exports = { print, log };
 ```
 
-そして、それらをインポートするにはimport 文ではなくrequire 関数を使います。
+そして、それらをインポートするには`import`文ではなく`require`関数を使います。
 
 ```javascript
-const { log, print } = require("./txt-helpers")
+const { print, log } = require("./testExport")
 ```
 
 # まとめ
